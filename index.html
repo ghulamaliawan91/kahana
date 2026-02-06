@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>جامع مسجد شاہ محمد بھیرہ</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0F5132;
+            --primary-light: #198754;
+            --accent-color: #D4AF37;
+            --jazz-color: #d32f2f; /* جائز کیش کا سرخ رنگ */
+            --easy-color: #00b44b; /* ایزی پیسہ کا سبز رنگ */
+            --bg-color: #F8F9FA;
+            --white: #ffffff;
+            --shadow: 0 4px 15px rgba(0,0,0,0.08);
+            --radius: 16px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            background-color: var(--bg-color);
+            max-width: 480px; 
+            margin: 0 auto;
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            min-height: 100vh;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: var(--white);
+            padding: 25px 20px;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            text-align: center;
+        }
+
+        .section-title { text-align: center; margin: 20px 0; color: var(--primary-color); font-size: 1.5rem; font-weight: bold; }
+
+        .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+
+        .payment-card {
+            background: var(--white);
+            padding: 20px 10px;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        /* جاز کیش اسٹائل */
+        .jazz-card { border-color: var(--jazz-color); }
+        .jazz-card i { color: var(--jazz-color); font-size: 2.5rem; }
+
+        /* ایزی پیسہ اسٹائل */
+        .easy-card { border-color: var(--easy-color); }
+        .easy-card i { color: var(--easy-color); font-size: 2.5rem; }
+
+        .payment-card h3 { font-size: 1.1rem; margin: 10px 0; }
+        .number { font-size: 1rem; font-weight: bold; direction: ltr; margin-bottom: 5px; }
+        .tap-hint { font-size: 0.7rem; color: #777; }
+
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 12px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: 0.3s;
+        }
+        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>مسجد شاہ محمد</h1>
+        <p>آن لائن عطیات</p>
+    </header>
+
+    <h2 class="section-title">ادائیگی کا طریقہ منتخب کریں</h2>
+
+    <div class="payment-grid">
+        <div class="payment-card jazz-card" onclick="handlePayment('03022258667', 'jazzcash://')">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <h3>جاز کیش</h3>
+            <div class="number">0302-2258667</div>
+            <span class="tap-hint">کلک کریں: کاپی + ایپ</span>
+        </div>
+
+        <div class="payment-card easy-card" onclick="handlePayment('03022258667', 'easypaisa://')">
+            <i class="fa-solid fa-wallet"></i>
+            <h3>ایزی پیسہ</h3>
+            <div class="number">0302-2258667</div>
+            <span class="tap-hint">کلک کریں: کاپی + ایپ</span>
+        </div>
+    </div>
+
+    <div id="toast">نمبر کاپی ہو گیا!</div>
+
+    <script>
+        function handlePayment(number, appLink) {
+            // ترتیب (Sequence): 1. کاپی کریں -> 2. میسج دکھائیں -> 3. ایپ کھولیں
+            navigator.clipboard.writeText(number).then(function() {
+                showToast("نمبر " + number + " کاپی ہو گیا! اب ایپ میں پیسٹ کریں۔");
+                
+                setTimeout(function() {
+                    window.location.href = appLink;
+                }, 1200);
+            });
+        }
+
+        function showToast(message) {
+            var x = document.getElementById("toast");
+            x.innerText = message;
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+    </script>
+
+</body>
+</html>
