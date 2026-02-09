@@ -2,141 +2,2257 @@
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>جامع مسجد شاہ محمد بھیرہ</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tahiri Solutions - Business Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        :root {
-            --primary-color: #0F5132;
-            --primary-light: #198754;
-            --accent-color: #D4AF37;
-            --jazz-color: #d32f2f; /* جائز کیش کا سرخ رنگ */
-            --easy-color: #00b44b; /* ایزی پیسہ کا سبز رنگ */
-            --bg-color: #F8F9FA;
-            --white: #ffffff;
-            --shadow: 0 4px 15px rgba(0,0,0,0.08);
-            --radius: 16px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
         body {
             font-family: 'Noto Nastaliq Urdu', serif;
-            background-color: var(--bg-color);
-            max-width: 480px; 
-            margin: 0 auto;
-            border-left: 1px solid #ddd;
-            border-right: 1px solid #ddd;
-            min-height: 100vh;
         }
-
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
-            color: var(--white);
-            padding: 25px 20px;
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-            text-align: center;
+        .stat-card {
+            transition: transform 0.2s;
         }
-
-        .section-title { text-align: center; margin: 20px 0; color: var(--primary-color); font-size: 1.5rem; font-weight: bold; }
-
-        .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-
-        .payment-card {
-            background: var(--white);
-            padding: 20px 10px;
-            border-radius: var(--radius);
-            text-align: center;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            border: 2px solid transparent;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: 0.2s;
+        .stat-card:hover {
+            transform: translateY(-5px);
         }
-
-        /* جاز کیش اسٹائل */
-        .jazz-card { border-color: var(--jazz-color); }
-        .jazz-card i { color: var(--jazz-color); font-size: 2.5rem; }
-
-        /* ایزی پیسہ اسٹائل */
-        .easy-card { border-color: var(--easy-color); }
-        .easy-card i { color: var(--easy-color); font-size: 2.5rem; }
-
-        .payment-card h3 { font-size: 1.1rem; margin: 10px 0; }
-        .number { font-size: 1rem; font-weight: bold; direction: ltr; margin-bottom: 5px; }
-        .tap-hint { font-size: 0.7rem; color: #777; }
-
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 50px;
-            padding: 12px;
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .notification-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .modal {
+            display: none;
             position: fixed;
             z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: 0.3s;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
         }
-        #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center flex-wrap gap-4">
+                <div>
+                    <!-- <h1 class="text-3xl font-bold">طاہری سلوشنز</h1> -->
+                                        <h1 class="text-3xl font-bold">تقوی پراپرٹی بھیرہ </h1>
 
-    <header>
-        <h1>مسجد شاہ محمد</h1>
-        <p>آن لائن عطیات</p>
+                    <!-- <p class="text-sm opacity-90">بھیرہ - مکمل کاروباری حل</p> -->
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <button onclick="exportToExcel()" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                        📊 Excel Export
+                    </button>
+                    <button onclick="exportToPDF()" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                        📄 PDF Report
+                    </button>
+                    <button onclick="backupData()" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                        💾 Backup
+                    </button>
+                    <button onclick="restoreData()" class="bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                        📂 Restore
+                    </button>
+                </div>
+                <div class="text-left">
+                    <!-- <p class="text-sm">بلال طاہری</p> -->
+                                        <p class="text-sm">مہر ناصر حیات  </p>
+
+                    <p class="text-xs opacity-75" id="currentDate"></p>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <h2 class="section-title">ادائیگی کا طریقہ منتخب کریں</h2>
-
-    <div class="payment-grid">
-        <div class="payment-card jazz-card" onclick="handlePayment('03022258667', 'jazzcash://')">
-            <i class="fa-solid fa-money-bill-transfer"></i>
-            <h3>جاز کیش</h3>
-            <div class="number">0302-2258667</div>
-            <span class="tap-hint">کلک کریں: کاپی + ایپ</span>
-        </div>
-
-        <div class="payment-card easy-card" onclick="handlePayment('03022258667', 'easypaisa://')">
-            <i class="fa-solid fa-wallet"></i>
-            <h3>ایزی پیسہ</h3>
-            <div class="number">0302-2258667</div>
-            <span class="tap-hint">کلک کریں: کاپی + ایپ</span>
+    <!-- Daily Backup Reminder -->
+    <div id="backupReminder" class="bg-yellow-50 border-l-4 border-yellow-400 p-4 hidden">
+        <div class="container mx-auto px-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">⚠️</span>
+                <p class="text-yellow-800 font-semibold">یاد دہانی: اپنا ڈیٹا بیک اپ لازمی رکھیں! آخری بیک اپ: <span id="lastBackupDate">کبھی نہیں</span></p>
+            </div>
+            <button onclick="closeBackupReminder()" class="text-yellow-600 hover:text-yellow-800 font-bold">✕</button>
         </div>
     </div>
 
-    <div id="toast">نمبر کاپی ہو گیا!</div>
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-6">
+        
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="stat-card bg-white rounded-lg shadow-md p-6 border-r-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">کل کسٹمرز</p>
+                        <p class="text-3xl font-bold text-blue-600" id="totalCustomers">0</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-md p-6 border-r-4 border-green-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">اس ماہ کل آمدن</p>
+                        <p class="text-3xl font-bold text-green-600" id="monthlyIncome">0 روپے</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-md p-6 border-r-4 border-red-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">اس ماہ اخراجات</p>
+                        <p class="text-3xl font-bold text-red-600" id="monthlyExpenses">0 روپے</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-md p-6 border-r-4 border-purple-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">خالص منافع</p>
+                        <p class="text-3xl font-bold text-purple-600" id="monthlyProfit">0 روپے</p>
+                    </div>
+                    <div class="bg-purple-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card bg-white rounded-lg shadow-md p-6 border-r-4 border-orange-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-600 text-sm">کل بقایا رقم</p>
+                        <p class="text-3xl font-bold text-orange-600" id="totalPending">0 روپے</p>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full">
+                        <svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="bg-white rounded-lg shadow-md mb-6 overflow-x-auto">
+            <div class="flex border-b">
+                <button class="tab-btn active px-6 py-3 font-semibold" onclick="switchTab('dashboard')">ڈیش بورڈ</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('customers')">کسٹمرز</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('property')">پراپرٹی</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('catering')">کیٹرنگ</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('services')">پبلک سروسز</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('expenses')">اخراجات</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('serviceTypes')">سروس منیجمنٹ</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('staff')">ملازمین</button>
+                <button class="tab-btn px-6 py-3 font-semibold" onclick="switchTab('reports')">رپورٹس</button>
+            </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tabContent">
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Recent Activities -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">حالیہ سرگرمیاں</h3>
+                        <div id="recentActivities" class="space-y-3">
+                            <p class="text-gray-500 text-center py-4">ابھی تک کوئی سرگرمی نہیں</p>
+                        </div>
+                    </div>
+
+                    <!-- Pending Tasks -->
+                    <div class="bg-white rounded-lg shadow-md p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">بقایا ادائیگیاں</h3>
+                        <div id="pendingTasksList" class="space-y-3">
+                            <p class="text-gray-500 text-center py-4">کوئی بقایا رقم نہیں</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow-md p-6 lg:col-span-2">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">فوری اقدامات</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button onclick="openModal('customerModal')" class="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold">
+                                نیا کسٹمر
+                            </button>
+                            <button onclick="openModal('propertyModal')" class="bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold">
+                                پراپرٹی شامل کریں
+                            </button>
+                            <button onclick="openModal('cateringModal')" class="bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-4 rounded-lg font-semibold">
+                                فنکشن بکنگ
+                            </button>
+                            <button onclick="openModal('serviceModal')" class="bg-purple-500 hover:bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold">
+                                نئی سروس
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customers Tab -->
+            <div id="customers-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">کسٹمرز کی فہرست</h3>
+                        <button onclick="openModal('customerModal')" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نیا کسٹمر
+                        </button>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <input type="text" id="customerSearch" placeholder="نام یا نمبر سے تلاش کریں..." 
+                               class="w-full px-4 py-2 border rounded-lg" onkeyup="searchCustomers()">
+                    </div>
+
+                    <div id="customersList" class="space-y-4">
+                        <p class="text-gray-500 text-center py-8">ابھی تک کوئی کسٹمر شامل نہیں</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Tab -->
+            <div id="property-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">پراپرٹی کے لین دین</h3>
+                        <button onclick="openModal('propertyModal')" class="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نئی پراپرٹی
+                        </button>
+                    </div>
+
+                    <div id="propertiesList" class="space-y-4">
+                        <p class="text-gray-500 text-center py-8">ابھی تک کوئی پراپرٹی شامل نہیں</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Catering Tab -->
+            <div id="catering-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">کیٹرنگ بکنگز</h3>
+                        <button onclick="openModal('cateringModal')" class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نئی بکنگ
+                        </button>
+                    </div>
+
+                    <div id="cateringList" class="space-y-4">
+                        <p class="text-gray-500 text-center py-8">ابھی تک کوئی بکنگ نہیں</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Tab -->
+            <div id="services-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">پبلک سروسز</h3>
+                        <button onclick="openModal('serviceModal')" class="bg-purple-500 hover:bg-purple-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نئی سروس
+                        </button>
+                    </div>
+
+                    <div id="servicesList" class="space-y-4">
+                        <p class="text-gray-500 text-center py-8">ابھی تک کوئی سروس شامل نہیں</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div id="expenses-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">دفتر کے اخراجات</h3>
+                        <button onclick="openModal('expenseModal')" class="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نیا خرچ
+                        </button>
+                    </div>
+
+                    <div id="expensesList" class="space-y-4">
+                        <p class="text-gray-500 text-center py-8">ابھی تک کوئی خرچ شامل نہیں</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Types Management Tab -->
+            <div id="serviceTypes-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">سروسز کی تنظیم</h3>
+                        <button onclick="openModal('newServiceTypeModal')" class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نئی سروس شامل کریں
+                        </button>
+                    </div>
+
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                        <p class="text-blue-800">
+                            <strong>یہاں آپ نئی سروسز شامل کر سکتے ہیں</strong> - جیسے کہ "انشورنس"، "ٹریول ایجنسی"، "موبائل شاپ" وغیرہ۔ ایک بار شامل کرنے کے بعد یہ سروسز آپ کے سسٹم میں دستیاب ہو جائیں گی۔
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="serviceTypesList">
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg">
+                            <h4 class="text-xl font-bold">پراپرٹی ڈیلنگ</h4>
+                            <p class="text-sm opacity-90 mt-2">بلٹ ان سروس</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-lg">
+                            <h4 class="text-xl font-bold">کیٹرنگ سروس</h4>
+                            <p class="text-sm opacity-90 mt-2">بلٹ ان سروس</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg">
+                            <h4 class="text-xl font-bold">پبلک سروسز</h4>
+                            <p class="text-sm opacity-90 mt-2">بلٹ ان سروس</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6" id="customServicesList">
+                        <!-- Custom services will be displayed here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Tab -->
+            <div id="staff-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">ملازمین کی تفصیلات</h3>
+                        <button onclick="openModal('staffModal')" class="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-6 rounded-lg font-semibold">
+                            + نیا ملازم
+                        </button>
+                    </div>
+
+                    <div id="staffList" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <p class="text-gray-500 text-center py-8 col-span-3">ملازمین شامل کریں</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-content hidden">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">مالی رپورٹ</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-lg">
+                            <p class="text-sm opacity-90">پراپرٹی کی آمدن</p>
+                            <p class="text-3xl font-bold" id="propertyIncome">0 روپے</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-yellow-500 to-yellow-600 text-white p-6 rounded-lg">
+                            <p class="text-sm opacity-90">کیٹرنگ کی آمدن</p>
+                            <p class="text-3xl font-bold" id="cateringIncome">0 روپے</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-lg">
+                            <p class="text-sm opacity-90">سروسز کی آمدن</p>
+                            <p class="text-3xl font-bold" id="servicesIncome">0 روپے</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-lg">
+                            <p class="text-sm opacity-90">کل اخراجات</p>
+                            <p class="text-3xl font-bold" id="totalExpensesReport">0 روپے</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-8 rounded-lg">
+                            <p class="text-lg opacity-90">کل آمدن</p>
+                            <p class="text-4xl font-bold" id="totalIncomeReport">0 روپے</p>
+                        </div>
+                        <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 text-white p-8 rounded-lg">
+                            <p class="text-lg opacity-90">خالص منافع</p>
+                            <p class="text-4xl font-bold" id="netProfitReport">0 روپے</p>
+                        </div>
+                    </div>
+
+                    <!-- Pending Amounts Section -->
+                    <div class="bg-orange-50 p-6 rounded-lg mb-6">
+                        <h4 class="text-xl font-bold mb-4 text-orange-800">بقایا رقم کی تفصیلات</h4>
+                        <div id="pendingAmountsList" class="space-y-3">
+                            <p class="text-gray-500 text-center py-4">کوئی بقایا رقم نہیں</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-lg">
+                        <h4 class="text-xl font-bold mb-4">تفصیلی لین دین</h4>
+                        <div id="transactionsList" class="space-y-2">
+                            <p class="text-gray-500 text-center py-4">کوئی لین دین نہیں</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نیا کسٹمر شامل کریں</h3>
+                <button onclick="closeModal('customerModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addCustomer(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">نام *</label>
+                    <input type="text" id="customerName" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">موبائل نمبر *</label>
+                    <input type="tel" id="customerPhone" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">CNIC</label>
+                    <input type="text" id="customerCNIC" class="w-full px-4 py-2 border rounded-lg" placeholder="12345-1234567-1">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">پتہ</label>
+                    <input type="text" id="customerAddress" class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">سروس کی قسم *</label>
+                    <select id="customerService" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                        <option value="پراپرٹی">پراپرٹی</option>
+                        <option value="کیٹرنگ">کیٹرنگ</option>
+                        <option value="پبلک سروس">پبلک سروس</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تفصیلات</label>
+                    <textarea id="customerDetails" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تصویر</label>
+                    <input type="file" id="customerImage" accept="image/*" class="w-full px-4 py-2 border rounded-lg">
+                    <div id="imagePreview" class="mt-2"></div>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Property Modal -->
+    <div id="propertyModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نئی پراپرٹی</h3>
+                <button onclick="closeModal('propertyModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addProperty(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">کسٹمر منتخب کریں *</label>
+                    <select id="propertyCustomer" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">کسٹمر منتخب کریں</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">لین دین کی قسم *</label>
+                    <select id="propertyType" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                        <option value="خریداری">خریداری</option>
+                        <option value="فروخت">فروخت</option>
+                        <option value="بروکریج">بروکریج</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">پراپرٹی کی قسم *</label>
+                    <select id="propertyCategory" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                        <option value="رہائشی">رہائشی</option>
+                        <option value="کمرشل">کمرشل</option>
+                        <option value="زرعی">زرعی</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">مقام *</label>
+                    <input type="text" id="propertyLocation" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">رقبہ (مربع فٹ/کنال)</label>
+                    <input type="text" id="propertySize" class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">قیمت (روپے) *</label>
+                    <input type="number" id="propertyPrice" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">کمیشن (2% خودکار)</label>
+                    <input type="text" id="propertyCommission" readonly class="w-full px-4 py-2 border rounded-lg bg-gray-100">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">وصول شدہ رقم (روپے)</label>
+                    <input type="number" id="propertyPaidAmount" class="w-full px-4 py-2 border rounded-lg" placeholder="کتنی رقم مل گئی؟">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تفصیلات</label>
+                    <textarea id="propertyDetails" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Catering Modal -->
+    <div id="cateringModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نئی کیٹرنگ بکنگ</h3>
+                <button onclick="closeModal('cateringModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addCatering(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">کسٹمر منتخب کریں *</label>
+                    <select id="cateringCustomer" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">کسٹمر منتخب کریں</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">فنکشن کی قسم *</label>
+                    <select id="functionType" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                        <option value="شادی">شادی</option>
+                        <option value="ولیمہ">ولیمہ</option>
+                        <option value="برتھ ڈے">برتھ ڈے</option>
+                        <option value="کارپوریٹ">کارپوریٹ ایونٹ</option>
+                        <option value="دیگر">دیگر</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تاریخ *</label>
+                    <input type="date" id="functionDate" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">مقام *</label>
+                    <input type="text" id="functionVenue" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">مہمانوں کی تعداد *</label>
+                    <input type="number" id="guestCount" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">فی پلیٹ قیمت (روپے) *</label>
+                    <input type="number" id="perPlateRate" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">کل رقم</label>
+                    <input type="text" id="totalAmount" readonly class="w-full px-4 py-2 border rounded-lg bg-gray-100">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">ایڈوانس رقم</label>
+                    <input type="number" id="advanceAmount" class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">میو/تفصیلات</label>
+                    <textarea id="menuDetails" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Service Modal -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نئی پبلک سروس</h3>
+                <button onclick="closeModal('serviceModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addService(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">کسٹمر منتخب کریں *</label>
+                    <select id="serviceCustomer" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">کسٹمر منتخب کریں</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">سروس کی قسم *</label>
+                    <select id="serviceType" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                        <option value="میراثی">میراثی</option>
+                        <option value="گاڑی رجسٹریشن">گاڑی رجسٹریشن</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تفصیلات *</label>
+                    <textarea id="serviceDescription" required rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">چارجز (روپے) *</label>
+                    <input type="number" id="serviceCharges" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">وصول شدہ رقم (روپے)</label>
+                    <input type="number" id="servicePaidAmount" class="w-full px-4 py-2 border rounded-lg" placeholder="کتنی رقم مل گئی؟">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">حالت *</label>
+                    <select id="serviceStatus" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="زیر التواء">زیر التواء</option>
+                        <option value="جاری">جاری</option>
+                        <option value="مکمل">مکمل</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">ملازم تفویض کریں</label>
+                    <select id="assignedStaff" class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Staff Modal -->
+    <div id="staffModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نیا ملازم شامل کریں</h3>
+                <button onclick="closeModal('staffModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addStaff(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">نام *</label>
+                    <input type="text" id="staffName" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">موبائل نمبر *</label>
+                    <input type="tel" id="staffPhone" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">عہدہ *</label>
+                    <input type="text" id="staffPosition" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تنخواہ (روپے)</label>
+                    <input type="number" id="staffSalary" class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نیا خرچ شامل کریں</h3>
+                <button onclick="closeModal('expenseModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addExpense(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">خرچ کی قسم *</label>
+                    <select id="expenseCategory" required class="w-full px-4 py-2 border rounded-lg">
+                        <option value="">منتخب کریں</option>
+                        <option value="دفتر کا کرایہ">دفتر کا کرایہ</option>
+                        <option value="بجلی بل">بجلی بل</option>
+                        <option value="انٹرنیٹ/فون">انٹرنیٹ/فون</option>
+                        <option value="ملازمین کی تنخواہ">ملازمین کی تنخواہ</option>
+                        <option value="ایندھن">ایندھن</option>
+                        <option value="اسٹیشنری">اسٹیشنری</option>
+                        <option value="مرمت">مرمت</option>
+                        <option value="دیگر">دیگر</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">رقم (روپے) *</label>
+                    <input type="number" id="expenseAmount" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تاریخ *</label>
+                    <input type="date" id="expenseDate" required class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تفصیلات</label>
+                    <textarea id="expenseDetails" rows="3" class="w-full px-4 py-2 border rounded-lg"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- New Service Type Modal -->
+    <div id="newServiceTypeModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">نئی سروس شامل کریں</h3>
+                <button onclick="closeModal('newServiceTypeModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <form onsubmit="addNewServiceType(event)" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">سروس کا نام *</label>
+                    <input type="text" id="newServiceName" required class="w-full px-4 py-2 border rounded-lg" placeholder="مثال: انشورنس، ٹریول ایجنسی">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">تفصیل</label>
+                    <textarea id="newServiceDescription" rows="3" class="w-full px-4 py-2 border rounded-lg" placeholder="اس سروس کی تفصیل لکھیں"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">رنگ منتخب کریں</label>
+                    <select id="newServiceColor" class="w-full px-4 py-2 border rounded-lg">
+                        <option value="green">سبز</option>
+                        <option value="red">سرخ</option>
+                        <option value="orange">نارنجی</option>
+                        <option value="teal">فیروزی</option>
+                        <option value="pink">گلابی</option>
+                        <option value="indigo">نیلا</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-lg font-bold">
+                    محفوظ کریں
+                </button>
+            </form>
+        </div>
+    </div>
 
     <script>
-        function handlePayment(number, appLink) {
-            // ترتیب (Sequence): 1. کاپی کریں -> 2. میسج دکھائیں -> 3. ایپ کھولیں
-            navigator.clipboard.writeText(number).then(function() {
-                showToast("نمبر " + number + " کاپی ہو گیا! اب ایپ میں پیسٹ کریں۔");
-                
-                setTimeout(function() {
-                    window.location.href = appLink;
-                }, 1200);
+        // Data Storage
+        let data = {
+            customers: [],
+            properties: [],
+            catering: [],
+            services: [],
+            staff: [],
+            expenses: [],
+            customServiceTypes: [],
+            lastBackup: null
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('tahiriSolutionsData');
+            if (saved) {
+                data = JSON.parse(saved);
+                updateDashboard();
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('tahiriSolutionsData', JSON.stringify(data));
+            updateDashboard();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            updateDate();
+            checkBackupReminder();
+            
+            // Auto-calculate property commission
+            document.getElementById('propertyPrice').addEventListener('input', function() {
+                const price = parseFloat(this.value) || 0;
+                const commission = (price * 0.02).toFixed(0);
+                document.getElementById('propertyCommission').value = commission + ' روپے';
+            });
+
+            // Auto-calculate catering total
+            document.getElementById('guestCount').addEventListener('input', calculateCateringTotal);
+            document.getElementById('perPlateRate').addEventListener('input', calculateCateringTotal);
+
+            // Image preview
+            document.getElementById('customerImage').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('imagePreview').innerHTML = 
+                            `<img src="${e.target.result}" class="image-preview">`;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        function checkBackupReminder() {
+            const lastBackup = data.lastBackup;
+            const now = new Date();
+            
+            if (!lastBackup) {
+                document.getElementById('backupReminder').classList.remove('hidden');
+                document.getElementById('lastBackupDate').textContent = 'کبھی نہیں';
+                return;
+            }
+            
+            const lastBackupDate = new Date(lastBackup);
+            const daysSinceBackup = Math.floor((now - lastBackupDate) / (1000 * 60 * 60 * 24));
+            
+            if (daysSinceBackup >= 1) {
+                document.getElementById('backupReminder').classList.remove('hidden');
+                document.getElementById('lastBackupDate').textContent = daysSinceBackup + ' دن پہلے';
+            }
+        }
+
+        function closeBackupReminder() {
+            document.getElementById('backupReminder').classList.add('hidden');
+        }
+
+        // Add New Service Type
+        function addNewServiceType(e) {
+            e.preventDefault();
+            
+            const serviceType = {
+                name: document.getElementById('newServiceName').value,
+                description: document.getElementById('newServiceDescription').value,
+                color: document.getElementById('newServiceColor').value,
+                createdDate: new Date().toISOString()
+            };
+            
+            data.customServiceTypes.push(serviceType);
+            saveData();
+            closeModal('newServiceTypeModal');
+            displayCustomServiceTypes();
+            alert('نئی سروس کامیابی سے شامل ہو گئی!');
+        }
+
+        function displayCustomServiceTypes() {
+            const container = document.getElementById('customServicesList');
+            
+            if (data.customServiceTypes.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            const colorClasses = {
+                green: 'from-green-500 to-green-600',
+                red: 'from-red-500 to-red-600',
+                orange: 'from-orange-500 to-orange-600',
+                teal: 'from-teal-500 to-teal-600',
+                pink: 'from-pink-500 to-pink-600',
+                indigo: 'from-indigo-500 to-indigo-600'
+            };
+            
+            container.innerHTML = '<h4 class="text-lg font-bold mb-4 mt-6">آپ کی اضافی سروسز:</h4><div class="grid grid-cols-1 md:grid-cols-3 gap-4">' +
+                data.customServiceTypes.map((service, index) => `
+                    <div class="bg-gradient-to-br ${colorClasses[service.color]} text-white p-6 rounded-lg relative">
+                        <h4 class="text-xl font-bold">${service.name}</h4>
+                        <p class="text-sm opacity-90 mt-2">${service.description || 'اضافی سروس'}</p>
+                        <button onclick="deleteServiceType(${index})" class="absolute top-2 left-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-2 py-1 rounded text-sm">
+                            🗑️
+                        </button>
+                    </div>
+                `).join('') + '</div>';
+        }
+
+        function deleteServiceType(index) {
+            if (confirm('کیا آپ واقعی اس سروس کو حذف کرنا چاہتے ہیں؟')) {
+                data.customServiceTypes.splice(index, 1);
+                saveData();
+                displayCustomServiceTypes();
+                alert('سروس حذف ہو گئی!');
+            }
+        }
+
+        function updateDate() {
+            const days = ['اتوار', 'پیر', 'منگل', 'بدھ', 'جمعرات', 'جمعہ', 'ہفتہ'];
+            const months = ['جنوری', 'فروری', 'مارچ', 'اپریل', 'مئی', 'جون', 
+                           'جولائی', 'اگست', 'ستمبر', 'اکتوبر', 'نومبر', 'دسمبر'];
+            const now = new Date();
+            const dateStr = `${days[now.getDay()]}، ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            document.getElementById('currentDate').textContent = dateStr;
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Update customer dropdowns
+            if (tabName === 'property' || tabName === 'catering' || tabName === 'services') {
+                updateCustomerDropdowns();
+            }
+
+            // Update staff dropdown
+            if (tabName === 'services') {
+                updateStaffDropdown();
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            if (modalId === 'propertyModal' || modalId === 'cateringModal' || modalId === 'serviceModal') {
+                updateCustomerDropdowns();
+            }
+            if (modalId === 'serviceModal') {
+                updateStaffDropdown();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            // Reset form
+            document.querySelector(`#${modalId} form`).reset();
+            document.getElementById('imagePreview').innerHTML = '';
+        }
+
+        function updateCustomerDropdowns() {
+            const dropdowns = ['propertyCustomer', 'cateringCustomer', 'serviceCustomer'];
+            dropdowns.forEach(dropdownId => {
+                const dropdown = document.getElementById(dropdownId);
+                if (dropdown) {
+                    dropdown.innerHTML = '<option value="">کسٹمر منتخب کریں</option>';
+                    data.customers.forEach((customer, index) => {
+                        dropdown.innerHTML += `<option value="${index}">${customer.name} - ${customer.phone}</option>`;
+                    });
+                }
             });
         }
 
-        function showToast(message) {
-            var x = document.getElementById("toast");
-            x.innerText = message;
-            x.className = "show";
-            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        function updateStaffDropdown() {
+            const dropdown = document.getElementById('assignedStaff');
+            if (dropdown) {
+                dropdown.innerHTML = '<option value="">منتخب کریں</option>';
+                data.staff.forEach((staff, index) => {
+                    dropdown.innerHTML += `<option value="${index}">${staff.name} - ${staff.position}</option>`;
+                });
+            }
+        }
+
+        function calculateCateringTotal() {
+            const guests = parseFloat(document.getElementById('guestCount').value) || 0;
+            const rate = parseFloat(document.getElementById('perPlateRate').value) || 0;
+            const total = guests * rate;
+            document.getElementById('totalAmount').value = total.toFixed(0) + ' روپے';
+        }
+
+        // Add Customer
+        function addCustomer(e) {
+            e.preventDefault();
+            
+            const imageInput = document.getElementById('customerImage');
+            let imageData = '';
+            
+            if (imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageData = e.target.result;
+                    saveCustomer(imageData);
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            } else {
+                saveCustomer('');
+            }
+        }
+
+        function saveCustomer(imageData) {
+            const customer = {
+                name: document.getElementById('customerName').value,
+                phone: document.getElementById('customerPhone').value,
+                cnic: document.getElementById('customerCNIC').value,
+                address: document.getElementById('customerAddress').value,
+                service: document.getElementById('customerService').value,
+                details: document.getElementById('customerDetails').value,
+                image: imageData,
+                date: new Date().toISOString(),
+                transactions: []
+            };
+            
+            data.customers.push(customer);
+            saveData();
+            closeModal('customerModal');
+            displayCustomers();
+            alert('کسٹمر کامیابی سے شامل ہو گیا!');
+        }
+
+        // Add Property
+        function addProperty(e) {
+            e.preventDefault();
+            
+            const price = parseFloat(document.getElementById('propertyPrice').value);
+            const commission = price * 0.02;
+            const paidAmount = parseFloat(document.getElementById('propertyPaidAmount').value) || 0;
+            
+            const property = {
+                customerId: document.getElementById('propertyCustomer').value,
+                type: document.getElementById('propertyType').value,
+                category: document.getElementById('propertyCategory').value,
+                location: document.getElementById('propertyLocation').value,
+                size: document.getElementById('propertySize').value,
+                price: price,
+                commission: commission,
+                paidAmount: paidAmount,
+                pendingAmount: commission - paidAmount,
+                details: document.getElementById('propertyDetails').value,
+                date: new Date().toISOString(),
+                status: 'جاری'
+            };
+            
+            data.properties.push(property);
+            
+            // Add to customer transactions
+            if (property.customerId) {
+                data.customers[property.customerId].transactions.push({
+                    type: 'پراپرٹی',
+                    details: `${property.category} - ${property.location}`,
+                    amount: property.commission,
+                    paidAmount: property.paidAmount,
+                    pendingAmount: property.pendingAmount,
+                    date: property.date
+                });
+            }
+            
+            saveData();
+            closeModal('propertyModal');
+            displayProperties();
+            alert('پراپرٹی کامیابی سے شامل ہو گئی!');
+        }
+
+        // Add Catering
+        function addCatering(e) {
+            e.preventDefault();
+            
+            const guests = parseFloat(document.getElementById('guestCount').value);
+            const rate = parseFloat(document.getElementById('perPlateRate').value);
+            const total = guests * rate;
+            const advance = parseFloat(document.getElementById('advanceAmount').value) || 0;
+            
+            const catering = {
+                customerId: document.getElementById('cateringCustomer').value,
+                functionType: document.getElementById('functionType').value,
+                date: document.getElementById('functionDate').value,
+                venue: document.getElementById('functionVenue').value,
+                guests: guests,
+                perPlateRate: rate,
+                totalAmount: total,
+                advanceAmount: advance,
+                paidAmount: advance,
+                pendingAmount: total - advance,
+                menuDetails: document.getElementById('menuDetails').value,
+                status: 'بکڈ',
+                createdDate: new Date().toISOString()
+            };
+            
+            data.catering.push(catering);
+            
+            // Add to customer transactions
+            if (catering.customerId) {
+                data.customers[catering.customerId].transactions.push({
+                    type: 'کیٹرنگ',
+                    details: `${catering.functionType} - ${catering.date}`,
+                    amount: catering.totalAmount,
+                    paidAmount: catering.paidAmount,
+                    pendingAmount: catering.pendingAmount,
+                    date: catering.createdDate
+                });
+            }
+            
+            saveData();
+            closeModal('cateringModal');
+            displayCatering();
+            alert('کیٹرنگ بکنگ کامیابی سے ہو گئی!');
+        }
+
+        // Add Service
+        function addService(e) {
+            e.preventDefault();
+            
+            const charges = parseFloat(document.getElementById('serviceCharges').value);
+            const paidAmount = parseFloat(document.getElementById('servicePaidAmount').value) || 0;
+            
+            const service = {
+                customerId: document.getElementById('serviceCustomer').value,
+                type: document.getElementById('serviceType').value,
+                description: document.getElementById('serviceDescription').value,
+                charges: charges,
+                paidAmount: paidAmount,
+                pendingAmount: charges - paidAmount,
+                status: document.getElementById('serviceStatus').value,
+                assignedStaff: document.getElementById('assignedStaff').value,
+                date: new Date().toISOString()
+            };
+            
+            data.services.push(service);
+            
+            // Add to customer transactions
+            if (service.customerId) {
+                data.customers[service.customerId].transactions.push({
+                    type: 'پبلک سروس',
+                    details: service.type,
+                    amount: service.charges,
+                    paidAmount: service.paidAmount,
+                    pendingAmount: service.pendingAmount,
+                    date: service.date
+                });
+            }
+            
+            saveData();
+            closeModal('serviceModal');
+            displayServices();
+            alert('سروس کامیابی سے شامل ہو گئی!');
+        }
+
+        // Add Staff
+        function addStaff(e) {
+            e.preventDefault();
+            
+            const staff = {
+                name: document.getElementById('staffName').value,
+                phone: document.getElementById('staffPhone').value,
+                position: document.getElementById('staffPosition').value,
+                salary: parseFloat(document.getElementById('staffSalary').value) || 0,
+                joinDate: new Date().toISOString()
+            };
+            
+            data.staff.push(staff);
+            saveData();
+            closeModal('staffModal');
+            displayStaff();
+            alert('ملازم کامیابی سے شامل ہو گیا!');
+        }
+
+        // Add Expense
+        function addExpense(e) {
+            e.preventDefault();
+            
+            const expense = {
+                category: document.getElementById('expenseCategory').value,
+                amount: parseFloat(document.getElementById('expenseAmount').value),
+                date: document.getElementById('expenseDate').value,
+                details: document.getElementById('expenseDetails').value,
+                createdDate: new Date().toISOString()
+            };
+            
+            data.expenses.push(expense);
+            saveData();
+            closeModal('expenseModal');
+            displayExpenses();
+            alert('خرچ کامیابی سے شامل ہو گیا!');
+        }
+
+        // Display Expenses
+        function displayExpenses() {
+            const container = document.getElementById('expensesList');
+            if (data.expenses.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">ابھی تک کوئی خرچ شامل نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = data.expenses.map((expense, index) => `
+                <div class="bg-white border rounded-lg p-4 hover:shadow-md transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="text-xl font-bold text-gray-800">${expense.category}</h4>
+                            <p class="text-gray-600">📅 ${expense.date}</p>
+                            ${expense.details ? `<p class="text-gray-600 mt-1">${expense.details}</p>` : ''}
+                            <p class="text-lg font-bold text-red-600 mt-2">${expense.amount.toLocaleString()} روپے</p>
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <button onclick="editExpense(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                ✏️ ترمیم
+                            </button>
+                            <button onclick="deleteExpense(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit Expense
+        function editExpense(index) {
+            const expense = data.expenses[index];
+            
+            document.getElementById('expenseCategory').value = expense.category;
+            document.getElementById('expenseAmount').value = expense.amount;
+            document.getElementById('expenseDate').value = expense.date;
+            document.getElementById('expenseDetails').value = expense.details || '';
+            
+            const form = document.querySelector('#expenseModal form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                data.expenses[index] = {
+                    ...data.expenses[index],
+                    category: document.getElementById('expenseCategory').value,
+                    amount: parseFloat(document.getElementById('expenseAmount').value),
+                    date: document.getElementById('expenseDate').value,
+                    details: document.getElementById('expenseDetails').value
+                };
+                
+                saveData();
+                closeModal('expenseModal');
+                alert('خرچ کی تفصیلات اپ ڈیٹ ہو گئیں!');
+                
+                form.onsubmit = addExpense;
+            };
+            
+            openModal('expenseModal');
+        }
+
+        // Delete Expense
+        function deleteExpense(index) {
+            if (confirm('کیا آپ واقعی اس خرچ کو حذف کرنا چاہتے ہیں؟')) {
+                data.expenses.splice(index, 1);
+                saveData();
+                alert('خرچ حذف ہو گیا!');
+            }
+        }
+
+        // Display Functions
+        function displayCustomers() {
+            const container = document.getElementById('customersList');
+            if (data.customers.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">ابھی تک کوئی کسٹمر شامل نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = data.customers.map((customer, index) => `
+                <div class="bg-white border rounded-lg p-4 hover:shadow-md transition">
+                    <div class="flex items-start gap-4">
+                        ${customer.image ? `<img src="${customer.image}" class="w-16 h-16 rounded-full object-cover">` : 
+                          '<div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-2xl">👤</div>'}
+                        <div class="flex-1">
+                            <h4 class="text-xl font-bold text-gray-800">${customer.name}</h4>
+                            <p class="text-gray-600">📞 ${customer.phone}</p>
+                            ${customer.cnic ? `<p class="text-gray-600">🆔 ${customer.cnic}</p>` : ''}
+                            ${customer.address ? `<p class="text-gray-600">📍 ${customer.address}</p>` : ''}
+                            <p class="text-sm text-blue-600 font-semibold mt-1">${customer.service}</p>
+                            ${customer.details ? `<p class="text-gray-500 text-sm mt-2">${customer.details}</p>` : ''}
+                            ${customer.transactions.length > 0 ? 
+                              `<p class="text-sm text-green-600 mt-2">کل لین دین: ${customer.transactions.length}</p>` : ''}
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="viewCustomerDetails(${index})" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 text-sm">
+                                تفصیلات
+                            </button>
+                            <button onclick="editCustomer(${index})" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 text-sm">
+                                ✏️ ترمیم
+                            </button>
+                            <button onclick="deleteCustomer(${index})" class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayProperties() {
+            const container = document.getElementById('propertiesList');
+            if (data.properties.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">ابھی تک کوئی پراپرٹی شامل نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = data.properties.map((property, index) => {
+                const customer = data.customers[property.customerId];
+                const pending = property.pendingAmount || 0;
+                return `
+                    <div class="bg-white border rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800">${property.category} - ${property.location}</h4>
+                                <p class="text-gray-600">کسٹمر: ${customer ? customer.name : 'نامعلوم'}</p>
+                                <p class="text-gray-600">قسم: ${property.type}</p>
+                                ${property.size ? `<p class="text-gray-600">رقبہ: ${property.size}</p>` : ''}
+                                <p class="text-lg font-bold text-green-600 mt-2">قیمت: ${property.price.toLocaleString()} روپے</p>
+                                <p class="text-sm text-blue-600">کمیشن (2%): ${property.commission.toLocaleString()} روپے</p>
+                                ${property.paidAmount ? `<p class="text-sm text-green-600">وصول شدہ: ${property.paidAmount.toLocaleString()} روپے</p>` : ''}
+                                ${pending > 0 ? `<p class="text-sm text-red-600 font-bold">بقایا: ${pending.toLocaleString()} روپے</p>` : ''}
+                                ${property.details ? `<p class="text-gray-500 text-sm mt-2">${property.details}</p>` : ''}
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm text-center">${property.status}</span>
+                                <button onclick="editProperty(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                    ✏️ ترمیم
+                                </button>
+                                <button onclick="deleteProperty(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                    🗑️ حذف
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayCatering() {
+            const container = document.getElementById('cateringList');
+            if (data.catering.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">ابھی تک کوئی بکنگ نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = data.catering.map((booking, index) => {
+                const customer = data.customers[booking.customerId];
+                const pending = booking.pendingAmount || 0;
+                return `
+                    <div class="bg-white border rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800">${booking.functionType}</h4>
+                                <p class="text-gray-600">کسٹمر: ${customer ? customer.name : 'نامعلوم'}</p>
+                                <p class="text-gray-600">📅 ${booking.date}</p>
+                                <p class="text-gray-600">📍 ${booking.venue}</p>
+                                <p class="text-gray-600">مہمان: ${booking.guests}</p>
+                                <p class="text-lg font-bold text-green-600 mt-2">کل رقم: ${booking.totalAmount.toLocaleString()} روپے</p>
+                                ${booking.paidAmount > 0 ? 
+                                  `<p class="text-sm text-blue-600">ایڈوانس: ${booking.paidAmount.toLocaleString()} روپے</p>` : ''}
+                                ${pending > 0 ? 
+                                  `<p class="text-sm text-red-600 font-bold">باقی: ${pending.toLocaleString()} روپے</p>` : 
+                                  '<p class="text-sm text-green-600 font-bold">✓ مکمل ادائیگی</p>'}
+                                ${booking.menuDetails ? `<p class="text-gray-500 text-sm mt-2">${booking.menuDetails}</p>` : ''}
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm text-center">${booking.status}</span>
+                                <button onclick="editCatering(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                    ✏️ ترمیم
+                                </button>
+                                <button onclick="deleteCatering(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                    🗑️ حذف
+                                </button>
+                                <button onclick="completeCatering(${index})" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
+                                    ✅ مکمل
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayServices() {
+            const container = document.getElementById('servicesList');
+            if (data.services.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">ابھی تک کوئی سروس شامل نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = data.services.map((service, index) => {
+                const customer = data.customers[service.customerId];
+                const staff = service.assignedStaff ? data.staff[service.assignedStaff] : null;
+                const pending = service.pendingAmount || 0;
+                const statusColors = {
+                    'زیر التواء': 'bg-yellow-100 text-yellow-800',
+                    'جاری': 'bg-blue-100 text-blue-800',
+                    'مکمل': 'bg-green-100 text-green-800'
+                };
+                return `
+                    <div class="bg-white border rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-800">${service.type}</h4>
+                                <p class="text-gray-600">کسٹمر: ${customer ? customer.name : 'نامعلوم'}</p>
+                                <p class="text-gray-600">${service.description}</p>
+                                <p class="text-lg font-bold text-green-600 mt-2">چارجز: ${service.charges.toLocaleString()} روپے</p>
+                                ${service.paidAmount > 0 ? `<p class="text-sm text-blue-600">وصول شدہ: ${service.paidAmount.toLocaleString()} روپے</p>` : ''}
+                                ${pending > 0 ? `<p class="text-sm text-red-600 font-bold">بقایا: ${pending.toLocaleString()} روپے</p>` : ''}
+                                ${staff ? `<p class="text-sm text-blue-600 mt-1">ملازم: ${staff.name}</p>` : ''}
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <span class="px-3 py-1 rounded-full text-sm text-center ${statusColors[service.status]}">${service.status}</span>
+                                <button onclick="editService(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                    ✏️ ترمیم
+                                </button>
+                                <button onclick="deleteService(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                    🗑️ حذف
+                                </button>
+                                ${service.status !== 'مکمل' ? 
+                                  `<button onclick="completeService(${index})" class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm">
+                                      ✅ مکمل
+                                  </button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayStaff() {
+            const container = document.getElementById('staffList');
+            if (data.staff.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8 col-span-3">ملازمین شامل کریں</p>';
+                return;
+            }
+            
+            container.innerHTML = data.staff.map((staff, index) => `
+                <div class="bg-white border rounded-lg p-6 hover:shadow-md transition">
+                    <div class="text-center">
+                        <div class="w-20 h-20 rounded-full bg-indigo-100 flex items-center justify-center text-4xl mx-auto mb-3">👤</div>
+                        <h4 class="text-xl font-bold text-gray-800">${staff.name}</h4>
+                        <p class="text-blue-600 font-semibold">${staff.position}</p>
+                        <p class="text-gray-600 mt-2">📞 ${staff.phone}</p>
+                        ${staff.salary > 0 ? `<p class="text-green-600 font-bold mt-2">${staff.salary.toLocaleString()} روپے/ماہ</p>` : ''}
+                        <div class="mt-4 flex gap-2 justify-center">
+                            <button onclick="editStaff(${index})" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm">
+                                ✏️ ترمیم
+                            </button>
+                            <button onclick="deleteStaff(${index})" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateDashboard() {
+            // Update stats
+            document.getElementById('totalCustomers').textContent = data.customers.length;
+            
+            // Calculate monthly income and expenses
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            let monthlyIncome = 0;
+            let monthlyExpenses = 0;
+            let totalPending = 0;
+            
+            // Property income
+            let propertyIncome = 0;
+            data.properties.forEach(property => {
+                const date = new Date(property.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    propertyIncome += property.commission;
+                    monthlyIncome += property.commission;
+                }
+                if (property.pendingAmount) {
+                    totalPending += property.pendingAmount;
+                }
+            });
+            
+            // Catering income
+            let cateringIncome = 0;
+            data.catering.forEach(booking => {
+                const date = new Date(booking.createdDate);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    cateringIncome += booking.totalAmount;
+                    monthlyIncome += booking.totalAmount;
+                }
+                if (booking.pendingAmount) {
+                    totalPending += booking.pendingAmount;
+                }
+            });
+            
+            // Services income
+            let servicesIncome = 0;
+            data.services.forEach(service => {
+                const date = new Date(service.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    servicesIncome += service.charges;
+                    monthlyIncome += service.charges;
+                }
+                if (service.pendingAmount) {
+                    totalPending += service.pendingAmount;
+                }
+            });
+            
+            // Calculate expenses
+            data.expenses.forEach(expense => {
+                const date = new Date(expense.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    monthlyExpenses += expense.amount;
+                }
+            });
+            
+            // Calculate profit
+            const monthlyProfit = monthlyIncome - monthlyExpenses;
+            
+            // Update dashboard stats
+            document.getElementById('monthlyIncome').textContent = monthlyIncome.toLocaleString() + ' روپے';
+            document.getElementById('monthlyExpenses').textContent = monthlyExpenses.toLocaleString() + ' روپے';
+            document.getElementById('monthlyProfit').textContent = monthlyProfit.toLocaleString() + ' روپے';
+            document.getElementById('totalPending').textContent = totalPending.toLocaleString() + ' روپے';
+            
+            // Update reports
+            document.getElementById('propertyIncome').textContent = propertyIncome.toLocaleString() + ' روپے';
+            document.getElementById('cateringIncome').textContent = cateringIncome.toLocaleString() + ' روپے';
+            document.getElementById('servicesIncome').textContent = servicesIncome.toLocaleString() + ' روپے';
+            document.getElementById('totalExpensesReport').textContent = monthlyExpenses.toLocaleString() + ' روپے';
+            document.getElementById('totalIncomeReport').textContent = monthlyIncome.toLocaleString() + ' روپے';
+            document.getElementById('netProfitReport').textContent = monthlyProfit.toLocaleString() + ' روپے';
+            
+            // Display pending amounts list
+            displayPendingAmounts();
+            
+            // Display all data
+            displayCustomers();
+            displayProperties();
+            displayCatering();
+            displayServices();
+            displayStaff();
+            displayExpenses();
+            displayCustomServiceTypes();
+            displayRecentActivities();
+            displayRecentPendingPayments();
+        }
+
+        function displayPendingAmounts() {
+            const container = document.getElementById('pendingAmountsList');
+            const pendingItems = [];
+            
+            // Property pending
+            data.properties.forEach((property, index) => {
+                if (property.pendingAmount && property.pendingAmount > 0) {
+                    const customer = data.customers[property.customerId];
+                    pendingItems.push({
+                        type: 'پراپرٹی',
+                        details: `${property.category} - ${property.location}`,
+                        customer: customer ? customer.name : 'نامعلوم',
+                        amount: property.pendingAmount
+                    });
+                }
+            });
+            
+            // Catering pending
+            data.catering.forEach((booking, index) => {
+                if (booking.pendingAmount && booking.pendingAmount > 0) {
+                    const customer = data.customers[booking.customerId];
+                    pendingItems.push({
+                        type: 'کیٹرنگ',
+                        details: `${booking.functionType} - ${booking.date}`,
+                        customer: customer ? customer.name : 'نامعلوم',
+                        amount: booking.pendingAmount
+                    });
+                }
+            });
+            
+            // Services pending
+            data.services.forEach((service, index) => {
+                if (service.pendingAmount && service.pendingAmount > 0) {
+                    const customer = data.customers[service.customerId];
+                    pendingItems.push({
+                        type: 'سروس',
+                        details: service.type,
+                        customer: customer ? customer.name : 'نامعلوم',
+                        amount: service.pendingAmount
+                    });
+                }
+            });
+            
+            if (pendingItems.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">کوئی بقایا رقم نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = pendingItems.map(item => `
+                <div class="bg-white border-l-4 border-orange-500 p-3 rounded">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="font-bold text-gray-800">${item.customer}</p>
+                            <p class="text-sm text-gray-600">${item.type}: ${item.details}</p>
+                        </div>
+                        <p class="font-bold text-orange-600">${item.amount.toLocaleString()} روپے</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayRecentActivities() {
+            const container = document.getElementById('recentActivities');
+            const allActivities = [
+                ...data.properties.map(p => ({ type: 'پراپرٹی', date: p.date, text: `${p.category} ${p.type}` })),
+                ...data.catering.map(c => ({ type: 'کیٹرنگ', date: c.createdDate, text: c.functionType })),
+                ...data.services.map(s => ({ type: 'سروس', date: s.date, text: s.type }))
+            ].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+            
+            if (allActivities.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">ابھی تک کوئی سرگرمی نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = allActivities.map(activity => `
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <div class="flex-1">
+                        <p class="font-semibold">${activity.text}</p>
+                        <p class="text-xs text-gray-500">${activity.type}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayRecentPendingPayments() {
+            const container = document.getElementById('pendingTasksList');
+            const pendingItems = [];
+            
+            // Property pending
+            data.properties.forEach((property) => {
+                if (property.pendingAmount && property.pendingAmount > 0) {
+                    const customer = data.customers[property.customerId];
+                    pendingItems.push({
+                        customer: customer ? customer.name : 'نامعلوم',
+                        amount: property.pendingAmount
+                    });
+                }
+            });
+            
+            // Catering pending
+            data.catering.forEach((booking) => {
+                if (booking.pendingAmount && booking.pendingAmount > 0) {
+                    const customer = data.customers[booking.customerId];
+                    pendingItems.push({
+                        customer: customer ? customer.name : 'نامعلوم',
+                        amount: booking.pendingAmount
+                    });
+                }
+            });
+            
+            // Services pending
+            data.services.forEach((service) => {
+                if (service.pendingAmount && service.pendingAmount > 0) {
+                    const customer = data.customers[service.customerId];
+                    pendingItems.push({
+                        customer: customer ? customer.name : 'نامعلوم',
+                        amount: service.pendingAmount
+                    });
+                }
+            });
+            
+            if (pendingItems.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">کوئی بقایا رقم نہیں</p>';
+                return;
+            }
+            
+            container.innerHTML = pendingItems.slice(0, 5).map(item => `
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded">
+                    <div class="w-2 h-2 rounded-full bg-orange-500"></div>
+                    <div class="flex-1">
+                        <p class="font-semibold">${item.customer}</p>
+                        <p class="text-xs text-orange-600">${item.amount.toLocaleString()} روپے</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function searchCustomers() {
+            const query = document.getElementById('customerSearch').value.toLowerCase();
+            const filtered = data.customers.filter(customer => 
+                customer.name.toLowerCase().includes(query) || 
+                customer.phone.includes(query)
+            );
+            
+            const container = document.getElementById('customersList');
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">کوئی کسٹمر نہیں ملا</p>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map((customer, index) => {
+                const realIndex = data.customers.indexOf(customer);
+                return `
+                    <div class="bg-white border rounded-lg p-4 hover:shadow-md transition">
+                        <div class="flex items-start gap-4">
+                            ${customer.image ? `<img src="${customer.image}" class="w-16 h-16 rounded-full object-cover">` : 
+                              '<div class="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center text-2xl">👤</div>'}
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold text-gray-800">${customer.name}</h4>
+                                <p class="text-gray-600">📞 ${customer.phone}</p>
+                                ${customer.cnic ? `<p class="text-gray-600">🆔 ${customer.cnic}</p>` : ''}
+                                <p class="text-sm text-blue-600 font-semibold mt-1">${customer.service}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="viewCustomerDetails(${realIndex})" class="bg-blue-500 text-white px-3 py-2 rounded hover:bg-blue-600 text-sm">
+                                    تفصیلات
+                                </button>
+                                <button onclick="editCustomer(${realIndex})" class="bg-yellow-500 text-white px-3 py-2 rounded hover:bg-yellow-600 text-sm">
+                                    ✏️
+                                </button>
+                                <button onclick="deleteCustomer(${realIndex})" class="bg-red-500 text-white px-3 py-2 rounded hover:bg-red-600 text-sm">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function viewCustomerDetails(index) {
+            const customer = data.customers[index];
+            alert(`کسٹمر کی تفصیلات:\n\nنام: ${customer.name}\nنمبر: ${customer.phone}\nسروس: ${customer.service}\nکل لین دین: ${customer.transactions.length}`);
+        }
+
+        // Edit Customer
+        function editCustomer(index) {
+            const customer = data.customers[index];
+            
+            // Fill form with existing data
+            document.getElementById('customerName').value = customer.name;
+            document.getElementById('customerPhone').value = customer.phone;
+            document.getElementById('customerCNIC').value = customer.cnic || '';
+            document.getElementById('customerAddress').value = customer.address || '';
+            document.getElementById('customerService').value = customer.service;
+            document.getElementById('customerDetails').value = customer.details || '';
+            
+            if (customer.image) {
+                document.getElementById('imagePreview').innerHTML = 
+                    `<img src="${customer.image}" class="image-preview">`;
+            }
+            
+            // Change form to edit mode
+            const form = document.querySelector('#customerModal form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const imageInput = document.getElementById('customerImage');
+                
+                if (imageInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        updateCustomer(index, e.target.result);
+                    };
+                    reader.readAsDataURL(imageInput.files[0]);
+                } else {
+                    updateCustomer(index, customer.image);
+                }
+            };
+            
+            openModal('customerModal');
+        }
+
+        function updateCustomer(index, imageData) {
+            data.customers[index] = {
+                ...data.customers[index],
+                name: document.getElementById('customerName').value,
+                phone: document.getElementById('customerPhone').value,
+                cnic: document.getElementById('customerCNIC').value,
+                address: document.getElementById('customerAddress').value,
+                service: document.getElementById('customerService').value,
+                details: document.getElementById('customerDetails').value,
+                image: imageData
+            };
+            
+            saveData();
+            closeModal('customerModal');
+            alert('کسٹمر کی تفصیلات اپ ڈیٹ ہو گئیں!');
+            
+            // Reset form to add mode
+            const form = document.querySelector('#customerModal form');
+            form.onsubmit = addCustomer;
+        }
+
+        // Delete Customer
+        function deleteCustomer(index) {
+            if (confirm('کیا آپ واقعی اس کسٹمر کو حذف کرنا چاہتے ہیں؟')) {
+                data.customers.splice(index, 1);
+                saveData();
+                alert('کسٹمر حذف ہو گیا!');
+            }
+        }
+
+        // Edit Property
+        function editProperty(index) {
+            const property = data.properties[index];
+            
+            updateCustomerDropdowns();
+            document.getElementById('propertyCustomer').value = property.customerId;
+            document.getElementById('propertyType').value = property.type;
+            document.getElementById('propertyCategory').value = property.category;
+            document.getElementById('propertyLocation').value = property.location;
+            document.getElementById('propertySize').value = property.size || '';
+            document.getElementById('propertyPrice').value = property.price;
+            document.getElementById('propertyPaidAmount').value = property.paidAmount || 0;
+            document.getElementById('propertyDetails').value = property.details || '';
+            document.getElementById('propertyCommission').value = property.commission + ' روپے';
+            
+            const form = document.querySelector('#propertyModal form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const price = parseFloat(document.getElementById('propertyPrice').value);
+                const commission = price * 0.02;
+                const paidAmount = parseFloat(document.getElementById('propertyPaidAmount').value) || 0;
+                
+                data.properties[index] = {
+                    ...data.properties[index],
+                    customerId: document.getElementById('propertyCustomer').value,
+                    type: document.getElementById('propertyType').value,
+                    category: document.getElementById('propertyCategory').value,
+                    location: document.getElementById('propertyLocation').value,
+                    size: document.getElementById('propertySize').value,
+                    price: price,
+                    commission: commission,
+                    paidAmount: paidAmount,
+                    pendingAmount: commission - paidAmount,
+                    details: document.getElementById('propertyDetails').value
+                };
+                
+                saveData();
+                closeModal('propertyModal');
+                alert('پراپرٹی کی تفصیلات اپ ڈیٹ ہو گئیں!');
+                
+                form.onsubmit = addProperty;
+            };
+            
+            openModal('propertyModal');
+        }
+
+        // Delete Property
+        function deleteProperty(index) {
+            if (confirm('کیا آپ واقعی اس پراپرٹی کو حذف کرنا چاہتے ہیں؟')) {
+                data.properties.splice(index, 1);
+                saveData();
+                alert('پراپرٹی حذف ہو گئی!');
+            }
+        }
+
+        // Edit Catering
+        function editCatering(index) {
+            const booking = data.catering[index];
+            
+            updateCustomerDropdowns();
+            document.getElementById('cateringCustomer').value = booking.customerId;
+            document.getElementById('functionType').value = booking.functionType;
+            document.getElementById('functionDate').value = booking.date;
+            document.getElementById('functionVenue').value = booking.venue;
+            document.getElementById('guestCount').value = booking.guests;
+            document.getElementById('perPlateRate').value = booking.perPlateRate;
+            document.getElementById('advanceAmount').value = booking.advanceAmount;
+            document.getElementById('menuDetails').value = booking.menuDetails || '';
+            document.getElementById('totalAmount').value = booking.totalAmount + ' روپے';
+            
+            const form = document.querySelector('#cateringModal form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const guests = parseFloat(document.getElementById('guestCount').value);
+                const rate = parseFloat(document.getElementById('perPlateRate').value);
+                const total = guests * rate;
+                
+                data.catering[index] = {
+                    ...data.catering[index],
+                    customerId: document.getElementById('cateringCustomer').value,
+                    functionType: document.getElementById('functionType').value,
+                    date: document.getElementById('functionDate').value,
+                    venue: document.getElementById('functionVenue').value,
+                    guests: guests,
+                    perPlateRate: rate,
+                    totalAmount: total,
+                    advanceAmount: parseFloat(document.getElementById('advanceAmount').value) || 0,
+                    menuDetails: document.getElementById('menuDetails').value
+                };
+                
+                saveData();
+                closeModal('cateringModal');
+                alert('کیٹرنگ بکنگ اپ ڈیٹ ہو گئی!');
+                
+                form.onsubmit = addCatering;
+            };
+            
+            openModal('cateringModal');
+        }
+
+        // Delete Catering
+        function deleteCatering(index) {
+            if (confirm('کیا آپ واقعی اس بکنگ کو حذف کرنا چاہتے ہیں؟')) {
+                data.catering.splice(index, 1);
+                saveData();
+                alert('بکنگ حذف ہو گئی!');
+            }
+        }
+
+        // Complete Catering
+        function completeCatering(index) {
+            if (confirm('کیا یہ فنکشن مکمل ہو گیا؟')) {
+                data.catering[index].status = 'مکمل';
+                saveData();
+                alert('فنکشن مکمل ہو گیا!');
+            }
+        }
+
+        // Edit Service
+        function editService(index) {
+            const service = data.services[index];
+            
+            updateCustomerDropdowns();
+            updateStaffDropdown();
+            
+            document.getElementById('serviceCustomer').value = service.customerId;
+            document.getElementById('serviceType').value = service.type;
+            document.getElementById('serviceDescription').value = service.description;
+            document.getElementById('serviceCharges').value = service.charges;
+            document.getElementById('servicePaidAmount').value = service.paidAmount || 0;
+            document.getElementById('serviceStatus').value = service.status;
+            document.getElementById('assignedStaff').value = service.assignedStaff || '';
+            
+            const form = document.querySelector('#serviceModal form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                const charges = parseFloat(document.getElementById('serviceCharges').value);
+                const paidAmount = parseFloat(document.getElementById('servicePaidAmount').value) || 0;
+                
+                data.services[index] = {
+                    ...data.services[index],
+                    customerId: document.getElementById('serviceCustomer').value,
+                    type: document.getElementById('serviceType').value,
+                    description: document.getElementById('serviceDescription').value,
+                    charges: charges,
+                    paidAmount: paidAmount,
+                    pendingAmount: charges - paidAmount,
+                    status: document.getElementById('serviceStatus').value,
+                    assignedStaff: document.getElementById('assignedStaff').value
+                };
+                
+                saveData();
+                closeModal('serviceModal');
+                alert('سروس کی تفصیلات اپ ڈیٹ ہو گئیں!');
+                
+                form.onsubmit = addService;
+            };
+            
+            openModal('serviceModal');
+        }
+
+        // Delete Service
+        function deleteService(index) {
+            if (confirm('کیا آپ واقعی اس سروس کو حذف کرنا چاہتے ہیں؟')) {
+                data.services.splice(index, 1);
+                saveData();
+                alert('سروس حذف ہو گئی!');
+            }
+        }
+
+        // Complete Service
+        function completeService(index) {
+            if (confirm('کیا یہ سروس مکمل ہو گئی؟')) {
+                data.services[index].status = 'مکمل';
+                saveData();
+                alert('سروس مکمل ہو گئی!');
+            }
+        }
+
+        // Edit Staff
+        function editStaff(index) {
+            const staff = data.staff[index];
+            
+            document.getElementById('staffName').value = staff.name;
+            document.getElementById('staffPhone').value = staff.phone;
+            document.getElementById('staffPosition').value = staff.position;
+            document.getElementById('staffSalary').value = staff.salary;
+            
+            const form = document.querySelector('#staffModal form');
+            form.onsubmit = function(e) {
+                e.preventDefault();
+                
+                data.staff[index] = {
+                    ...data.staff[index],
+                    name: document.getElementById('staffName').value,
+                    phone: document.getElementById('staffPhone').value,
+                    position: document.getElementById('staffPosition').value,
+                    salary: parseFloat(document.getElementById('staffSalary').value) || 0
+                };
+                
+                saveData();
+                closeModal('staffModal');
+                alert('ملازم کی تفصیلات اپ ڈیٹ ہو گئیں!');
+                
+                form.onsubmit = addStaff;
+            };
+            
+            openModal('staffModal');
+        }
+
+        // Delete Staff
+        function deleteStaff(index) {
+            if (confirm('کیا آپ واقعی اس ملازم کو حذف کرنا چاہتے ہیں؟')) {
+                data.staff.splice(index, 1);
+                saveData();
+                alert('ملازم حذف ہو گیا!');
+            }
+        }
+
+        // Backup Data
+        function backupData() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+            link.download = `tahiri-solutions-backup-${dateStr}.json`;
+            
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            // Update last backup date
+            data.lastBackup = new Date().toISOString();
+            saveData();
+            
+            alert('✅ بیک اپ کامیابی سے ڈاؤن لوڈ ہو گیا!');
+        }
+
+        // Restore Data
+        function restoreData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const restoredData = JSON.parse(e.target.result);
+                        
+                        if (confirm('⚠️ تمام موجودہ ڈیٹا replace ہو جائے گا۔ کیا آپ جاری رکھنا چاہتے ہیں؟')) {
+                            data = restoredData;
+                            saveData();
+                            updateDashboard();
+                            alert('✅ ڈیٹا کامیابی سے restore ہو گیا!');
+                            location.reload();
+                        }
+                    } catch (error) {
+                        alert('❌ غلط فائل! صحیح backup فائل منتخب کریں۔');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+
+        // Export to Excel
+        function exportToExcel() {
+            let csvContent = '';
+            
+            // Header
+            csvContent += '=== طاہری سلوشنز - مکمل رپورٹ ===\n';
+            csvContent += `تاریخ: ${new Date().toLocaleDateString('ur-PK')}\n\n`;
+            
+            // Customers
+            csvContent += '--- کسٹمرز ---\n';
+            csvContent += 'نام,موبائل نمبر,CNIC,پتہ,سروس\n';
+            data.customers.forEach(c => {
+                csvContent += `${c.name},${c.phone},${c.cnic || ''},${c.address || ''},${c.service}\n`;
+            });
+            csvContent += '\n';
+            
+            // Properties
+            csvContent += '--- پراپرٹی ---\n';
+            csvContent += 'قسم,مقام,قیمت,کمیشن,وصول شدہ,بقایا\n';
+            data.properties.forEach(p => {
+                csvContent += `${p.category},${p.location},${p.price},${p.commission},${p.paidAmount || 0},${p.pendingAmount || 0}\n`;
+            });
+            csvContent += '\n';
+            
+            // Catering
+            csvContent += '--- کیٹرنگ ---\n';
+            csvContent += 'فنکشن,تاریخ,مقام,مہمان,کل رقم,ایڈوانس,بقایا\n';
+            data.catering.forEach(c => {
+                csvContent += `${c.functionType},${c.date},${c.venue},${c.guests},${c.totalAmount},${c.paidAmount || 0},${c.pendingAmount || 0}\n`;
+            });
+            csvContent += '\n';
+            
+            // Services
+            csvContent += '--- پبلک سروسز ---\n';
+            csvContent += 'قسم,تفصیل,چارجز,وصول شدہ,بقایا,حالت\n';
+            data.services.forEach(s => {
+                csvContent += `${s.type},${s.description},${s.charges},${s.paidAmount || 0},${s.pendingAmount || 0},${s.status}\n`;
+            });
+            csvContent += '\n';
+            
+            // Expenses
+            csvContent += '--- اخراجات ---\n';
+            csvContent += 'قسم,رقم,تاریخ,تفصیل\n';
+            data.expenses.forEach(e => {
+                csvContent += `${e.category},${e.amount},${e.date},${e.details || ''}\n`;
+            });
+            
+            // Create download
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')}`;
+            link.download = `tahiri-solutions-report-${dateStr}.csv`;
+            
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            alert('✅ Excel رپورٹ ڈاؤن لوڈ ہو گئی!');
+        }
+
+        // Export to PDF
+        function exportToPDF() {
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            // Calculate totals
+            let totalIncome = 0;
+            let totalExpenses = 0;
+            let totalPending = 0;
+            
+            data.properties.forEach(p => {
+                const date = new Date(p.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    totalIncome += p.commission;
+                }
+                totalPending += p.pendingAmount || 0;
+            });
+            
+            data.catering.forEach(c => {
+                const date = new Date(c.createdDate);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    totalIncome += c.totalAmount;
+                }
+                totalPending += c.pendingAmount || 0;
+            });
+            
+            data.services.forEach(s => {
+                const date = new Date(s.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    totalIncome += s.charges;
+                }
+                totalPending += s.pendingAmount || 0;
+            });
+            
+            data.expenses.forEach(e => {
+                const date = new Date(e.date);
+                if (date.getMonth() === currentMonth && date.getFullYear() === currentYear) {
+                    totalExpenses += e.amount;
+                }
+            });
+            
+            const profit = totalIncome - totalExpenses;
+            
+            // Create PDF content
+            let pdfContent = `
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; }
+        h1 { text-align: center; color: #6366f1; }
+        h2 { color: #4f46e5; border-bottom: 2px solid #6366f1; padding-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+        th { background-color: #6366f1; color: white; }
+        .summary { background-color: #f0f9ff; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .profit { color: #16a34a; font-weight: bold; font-size: 24px; }
+        .expense { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <h1>طاہری سلوشنز - مالی رپورٹ</h1>
+    <p style="text-align:center">تاریخ: ${now.toLocaleDateString('ur-PK')}</p>
+    
+    <div class="summary">
+        <h2>خلاصہ</h2>
+        <p><strong>کل آمدن:</strong> ${totalIncome.toLocaleString()} روپے</p>
+        <p class="expense"><strong>کل اخراجات:</strong> ${totalExpenses.toLocaleString()} روپے</p>
+        <p class="profit"><strong>خالص منافع:</strong> ${profit.toLocaleString()} روپے</p>
+        <p style="color:#f59e0b"><strong>کل بقایا:</strong> ${totalPending.toLocaleString()} روپے</p>
+    </div>
+    
+    <h2>کسٹمرز (${data.customers.length})</h2>
+    <table>
+        <tr><th>نام</th><th>موبائل</th><th>سروس</th></tr>
+        ${data.customers.map(c => `<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.service}</td></tr>`).join('')}
+    </table>
+    
+    <h2>پراپرٹی کی آمدن</h2>
+    <table>
+        <tr><th>قسم</th><th>مقام</th><th>کمیشن</th><th>بقایا</th></tr>
+        ${data.properties.map(p => `<tr><td>${p.category}</td><td>${p.location}</td><td>${p.commission.toLocaleString()}</td><td>${(p.pendingAmount || 0).toLocaleString()}</td></tr>`).join('')}
+    </table>
+    
+    <h2>اخراجات</h2>
+    <table>
+        <tr><th>قسم</th><th>رقم</th><th>تاریخ</th></tr>
+        ${data.expenses.map(e => `<tr><td>${e.category}</td><td>${e.amount.toLocaleString()}</td><td>${e.date}</td></tr>`).join('')}
+    </table>
+</body>
+</html>
+            `;
+            
+            // Open in new window for printing
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write(pdfContent);
+            printWindow.document.close();
+            printWindow.focus();
+            
+            setTimeout(() => {
+                printWindow.print();
+            }, 250);
+            
+            alert('✅ PDF رپورٹ تیار ہو گئی! Print/Save as PDF کریں۔');
         }
     </script>
-
 </body>
 </html>
